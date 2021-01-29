@@ -1,7 +1,5 @@
 <template>
   <b-card
-    bg-variant="dark"
-    text-variant="white"
     :title="dados.nome"
     :sub-title="dados.email"
   >

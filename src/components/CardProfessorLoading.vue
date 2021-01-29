@@ -5,7 +5,6 @@
         title="--------------------"
         sub-title="--------------"
       >
-        <b-card-text> Matrícula: <br />Turma: <br />Turno: </b-card-text>
         <b-button href="#" variant="primary">Detalhes</b-button>
       </b-card>
     </b-overlay>
@@ -14,7 +13,7 @@
 
 <script>
 export default {
-  name: "CardAlunoLoading",
+  name: "CardProfessorLoading",
 };
 </script>
 

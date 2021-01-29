@@ -1,29 +1,40 @@
 <template>
-  <div>
-    <div>
-      <b-navbar fixed toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand href="#">NavBar</b-navbar-brand>
-      </b-navbar>
-    </div>
+  <b-card no-body>
     <b-tabs
+      card
       active-nav-item-class="font-weight-bold text-uppercase"
       content-class="mt-3"
-      fill
+      justified
     >
       <b-tab title="Alunos" active>
+        <div v-if="loading">
+          <div class="p-2" v-for="item in 5" :key="item.id">
+            <CardAlunoLoading />
+          </div>
+        </div>
+          <div class="p-2" v-for="item in alunosOn" :key="item.id">
+            <CardAluno :dados="item" />
+          </div>
+      </b-tab>
+      <b-tab title="Sets">
+        <div class="p-2" v-for="item in alunosSuperSets" :key="item.id">
+        <b-card bg-variant="success" text-variant="white" :header="item.nome" class="text-center">
+        <b-card-text></b-card-text>
+        </b-card>
+        </div>
+      </b-tab>
+      <b-tab title="Alunos Desativados">
         <div v-if="loading">
           <div class="p-2" v-for="item in 20" :key="item.id">
             <CardAlunoLoading />
           </div>
         </div>
-        <div class="p-2" v-for="item in alunos" :key="item.id">
-          <CardAluno :dados="item" />
-        </div>
-      </b-tab>
-      <b-tab title="Sets"><p>I'm the second tab</p></b-tab>
-      <b-tab title="Alunos Desativados"><p>I'm the second tab</p></b-tab>
+          <div class="p-2" v-for="item in alunosOff" :key="item.id">
+            <CardAluno :dados="item" />
+          </div>
+        </b-tab>
     </b-tabs>
-  </div>
+  </b-card>
 </template>
 
 <script>
@@ -38,8 +49,10 @@ export default {
   },
   data: function () {
     return {
-      alunos: [],
       loading: true,
+      alunosOn: [],
+      alunosOff: [],
+      alunosSuperSets: [],
     };
   },
   methods: {
@@ -50,9 +63,24 @@ export default {
         .once("value")
         .then((snapshot) => {
           let dados = snapshot.val();
-          this.alunos = dados;
-          console.log(this.alunos);
+
+          for (const key in dados) {
+            if (dados[key].enabled == true) {
+              this.alunosOn.push(dados[key]);
+            } else {
+              this.alunosOff.push(dados[key]);
+            }
+          }
+
           this.loading = false;
+        });
+      firebase
+        .database()
+        .ref(`${collection}/sets`)
+        .once("value")
+        .then((snapshot) => {
+          let dados = snapshot.val();
+          this.alunosSuperSets = dados;
         });
     },
   },
@@ -63,4 +91,7 @@ export default {
 </script>
 
 <style scoped>
+li {
+  list-style: none;
+}
 </style>
