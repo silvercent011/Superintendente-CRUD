@@ -17,11 +17,11 @@
           </div>
       </b-tab>
       <b-tab title="Sets">
+        <b-list-group>
         <div class="p-2" v-for="item in alunosSuperSets" :key="item.id">
-        <b-card bg-variant="success" text-variant="white" :header="item.nome" class="text-center">
-        <b-card-text></b-card-text>
-        </b-card>
+          <SuperSetListItem :item="item"/>
         </div>
+        </b-list-group>
       </b-tab>
       <b-tab title="Alunos Desativados">
         <div v-if="loading">
@@ -41,11 +41,13 @@
 import firebase from "firebase";
 import CardAlunoLoading from "../components/CardAlunoLoading";
 import CardAluno from "../components/CardAluno";
+import SuperSetListItem from "../components/SuperSetListItem";
 export default {
   name: "Alunos",
   components: {
     CardAlunoLoading,
     CardAluno,
+    SuperSetListItem
   },
   data: function () {
     return {

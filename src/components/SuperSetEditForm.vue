@@ -1,11 +1,16 @@
 <template>
   <b-modal
-    :id="dados.email"
+    :id="dados.id"
     centered
     :title="dados.nome + ' - Editar'"
     :hide-footer="true"
   >
-    <b-form @submit="updateData">
+    <b-form>
+
+        <div v-if="form.default" >
+            <b-alert show variant="danger">ATENÇÃO! O set selecionado é atualizado frequentemente pelo superintendente, alterações salvas serão perdidas na próxima rotina do script.</b-alert>
+        </div>
+
       <b-form-group id="input-group-1" label="Nome:" label-for="input-nome">
         <b-form-input
           id="input-nome"
@@ -16,21 +21,20 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Email:" label-for="input-email">
-        <b-form-input
-          id="input-email"
-          v-model="form.email"
-          type="email"
-          placeholder="Email"
-          required
-        ></b-form-input>
+      <b-form-group id="input-group-2" label="Emails:" label-for="input-emails">
+        <b-form-tags
+          input-id="input-emails"
+          v-model="form.emails"
+          tag-variant="primary"
+          tag-pills
+          size="sm"
+          placeholder="Adicionar e-mails"
+        ></b-form-tags>
       </b-form-group>
 
       <b-col>
         <b-row class="py-2">
-          <b-button type="submit" variant="primary" block
-            >Salvar</b-button
-          >
+          <b-button type="submit" variant="primary" block>Salvar</b-button>
         </b-row>
         <b-row class="py-2">
           <b-button
@@ -54,43 +58,23 @@
 </template>
 
 <script>
-import firebase from "firebase";
+// import firebase from "firebase";
 export default {
-  name: "ProfessorEditForm",
+  name: "SuperSetEditForm",
   props: ["dados"],
   data() {
     return {
       form: {
+        default: this.$props.dados.default,
         nome: this.$props.dados.nome,
-        email: this.$props.dados.email,
+        emails: this.$props.dados.emails,
         enabled: this.$props.dados.enabled,
       },
     };
   },
   methods: {
-    updateData() {
-      let newData = {
-        nome: this.form.nome,
-        email: this.form.email,
-      };
-      firebase
-        .database()
-        .ref("/professores/data/" + this.$props.dados.matricula)
-        .update(newData);
-      this.$props.dados.nome = this.form.nome;
-      this.$props.dados.email = this.form.email;
-    },
-    changeEnabledStatus() {
-      this.form.enabled = !this.form.enabled;
-      let newData = {
-        enabled: this.form.enabled,
-      };
-      firebase
-        .database()
-        .ref("/professores/data/" + this.$props.dados.matricula)
-        .update(newData);
-      this.$props.dados.enabled = this.form.enabled;
-    },
+    updateData() {},
+    changeEnabledStatus() {},
   },
 };
 </script>

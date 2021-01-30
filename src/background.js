@@ -23,7 +23,7 @@ async function createWindow() {
     },
     title: "Superintendente"
   })
-  win.menuBarVisible = false
+  // win.menuBarVisible = false
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)

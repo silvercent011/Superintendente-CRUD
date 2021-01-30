@@ -48,7 +48,7 @@
       <b-col>
         <b-row class="py-2">
           <b-button type="submit" variant="primary" block
-            >Atualizar Dados</b-button
+            >Salvar</b-button
           >
         </b-row>
         <b-row class="py-2">
