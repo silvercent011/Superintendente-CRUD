@@ -27,11 +27,11 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Emails:" label-for="input-emails">
+      <b-form-group id="input-group-2" label="Tópicos:" label-for="input-topicos">
         <b-form-tags
           :disabled="form.default"
-          input-id="input-emails"
-          v-model="form.emails"
+          input-id="input-topicos"
+          v-model="form.topicos"
           tag-variant="primary"
           tag-pills
           size="sm"
@@ -67,15 +67,14 @@
 <script>
 import firebase from "firebase";
 export default {
-  name: "SuperSetEditForm",
+  name: "SuperSetTopicsEditForm",
   props: ["dados","type",],
   data() {
     return {
       form: {
         key: this.$props.dados.key,
-        default: this.$props.dados.default,
         nome: this.$props.dados.nome,
-        emails: this.$props.dados.emails,
+        topicos: this.$props.dados.topicos,
       },
     };
   },
@@ -84,15 +83,13 @@ export default {
       let newData = {
         nome: this.form.nome,
         key: this.form.key,
-        emails: this.form.emails,
-        default: this.form.default,
+        topicos: this.form.topicos,
       };
       console.log(newData)
       firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key).update(newData)
       this.$props.dados.key = newData.key
-      this.$props.dados.default = newData.default
       this.$props.dados.nome = newData.nome
-      this.$props.dados.emails = newData.emails
+      this.$props.dados.topicos = newData.topicos
     },
     deleteSet() {
       let ref = firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key)

@@ -8,13 +8,6 @@
     :hide-footer="true"
   >
     <b-form>
-      <div v-if="form.default">
-        <b-alert show variant="danger"
-          >ATENÇÃO! O set selecionado é atualizado frequentemente pelo
-          superintendente, não é possível salvar, modificar ou excluir este
-          superset.</b-alert
-        >
-      </div>
 
       <b-form-group id="input-group-1" label="Nome:" label-for="input-nome">
         <b-form-input
@@ -25,18 +18,6 @@
           placeholder="Nome"
           required
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-2" label="Emails:" label-for="input-emails">
-        <b-form-tags
-          :disabled="form.default"
-          input-id="input-emails"
-          v-model="form.emails"
-          tag-variant="primary"
-          tag-pills
-          size="sm"
-          placeholder="Adicionar e-mails"
-        ></b-form-tags>
       </b-form-group>
 
       <b-col>
@@ -68,14 +49,12 @@
 import firebase from "firebase";
 export default {
   name: "SuperSetEditForm",
-  props: ["dados","type",],
+  props: ["dados","type","model"],
   data() {
     return {
       form: {
         key: this.$props.dados.key,
-        default: this.$props.dados.default,
         nome: this.$props.dados.nome,
-        emails: this.$props.dados.emails,
       },
     };
   },
@@ -84,18 +63,14 @@ export default {
       let newData = {
         nome: this.form.nome,
         key: this.form.key,
-        emails: this.form.emails,
-        default: this.form.default,
       };
       console.log(newData)
-      firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key).update(newData)
+      firebase.database().ref(`/${this.$props.type}/${this.$props.model}/` + this.form.key).update(newData)
       this.$props.dados.key = newData.key
-      this.$props.dados.default = newData.default
       this.$props.dados.nome = newData.nome
-      this.$props.dados.emails = newData.emails
     },
     deleteSet() {
-      let ref = firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key)
+      let ref = firebase.database().ref(`/${this.$props.type}/${this.$props.model}/` + this.form.key)
       ref.remove()
       this.$bvModal.hide(this.form.key)
     },
