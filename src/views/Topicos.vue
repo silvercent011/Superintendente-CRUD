@@ -15,8 +15,8 @@
           </b-button-group>
         </b-button-toolbar>
         <b-list-group>
-          <div class="p-2" v-for="item in topicos" :key="item.id">
-            <SuperSetListItem :item="item" type="topicos" model="data"/>
+          <div class="p-2" v-for="item in topicos" :key="item.key">
+            <SuperSetListItem :item="item" type="topicos" model="data" />
           </div>
         </b-list-group>
       </b-tab>
@@ -29,8 +29,8 @@
           </b-button-group>
         </b-button-toolbar>
         <b-list-group>
-          <div class="p-2" v-for="item in topicosSuperSets" :key="item.id">
-            <SuperSetListItem :item="item" type="topicos" model="sets"/>
+          <div class="p-2" v-for="item in topicosSuperSets" :key="item.key">
+            <SuperSetListItem :item="item" type="topicos" model="sets" />
           </div>
         </b-list-group>
       </b-tab>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import { store } from "@/store";
 import SuperSetListItem from "../components/SuperSetListItem";
 export default {
   name: "Topicos",
@@ -55,28 +55,15 @@ export default {
     };
   },
   methods: {
-    getData(collection) {
-      firebase
-        .database()
-        .ref(`/${collection}/data`)
-        .once("value")
-        .then((snapshot) => {
-          let dados = snapshot.val();
-          if (dados != null) {
-            this.topicos = dados
-          }
+    getData() {
+      if (store.state.database.topicos.data != null) {
+        this.topicos = store.state.database.topicos.data;
+      }
+      this.loading = false;
 
-          this.loading = false;
-        });
-      firebase
-        .database()
-        .ref(`${collection}/sets`)
-        .once("value")
-        .then((snapshot) => {
-          let dados = snapshot.val();
-          if (dados != null) {
-          this.topicosSuperSets = dados;}
-        });
+      if (store.state.database.topicos.sets != null) {
+        this.topicosSuperSets = store.state.database.topicos.sets;
+      }
     },
     newSuperSet() {
       let newSet = {
@@ -86,7 +73,7 @@ export default {
       this.$set(this.topicosSuperSets, newSet.key, newSet);
       this.$bvModal.show(newSet.key);
     },
-    
+
     newTopico() {
       let newSet = {
         key: String(Date.now()),
@@ -96,12 +83,11 @@ export default {
       this.$bvModal.show(newSet.key);
     },
   },
-  mounted: function () {
-    this.getData("topicos");
+  created() {
+    this.getData();
   },
 };
 </script>
 
 <style>
-
 </style>

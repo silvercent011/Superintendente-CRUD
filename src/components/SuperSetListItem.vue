@@ -3,7 +3,7 @@
     {{ item.nome }}
     <div>
     <div v-if="item.emails != undefined " >
-    <b-badge class="mx-3" variant="primary" pill> {{ item.emails.length }}</b-badge>
+    <b-badge class="mx-3" variant="primary" pill> {{ item.emails.length }} </b-badge>
     <b-icon icon="pencil-fill" scale="1"></b-icon>
     </div>
     <div v-if="type != 'topicos'" >
@@ -29,7 +29,7 @@ export default {
     components:{
         SuperSetEditForm,
         TopicosEditForm,
-        SuperSetTopicsEditForm
+        SuperSetTopicsEditForm,
     },
     props: ['item','type','model'],
     data(){

@@ -34,6 +34,7 @@
           v-model="form.topicos"
           tag-variant="primary"
           tag-pills
+          separator=";"
           size="sm"
           placeholder="Adicionar e-mails"
         ></b-form-tags>

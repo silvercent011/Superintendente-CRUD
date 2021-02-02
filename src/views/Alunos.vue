@@ -7,12 +7,20 @@
       justified
     >
       <b-tab title="Alunos" active>
+        <div>
+          <vue-bootstrap-typeahead
+            v-model="query"
+            :data="searchOn"
+            :serializer="(aluno) => `${aluno.matricula} - ${aluno.nome}`"
+            @hit="openModalAluno($event)"
+          />
+        </div>
         <div v-if="loading">
-          <div class="p-2" v-for="item in 5" :key="item.id">
+          <div class="p-2" v-for="item in 5" :key="item.key">
             <CardAlunoLoading />
           </div>
         </div>
-        <div class="p-2" v-for="item in alunosOn" :key="item.id">
+        <div class="p-2" v-for="item in alunosOn" :key="item.key">
           <CardAluno :dados="item" />
         </div>
       </b-tab>
@@ -25,19 +33,27 @@
           </b-button-group>
         </b-button-toolbar>
         <b-list-group>
-          <div class="p-2" v-for="item in alunosSuperSets" :key="item.id">
+          <div class="p-2" v-for="item in alunosSuperSets" :key="item.key">
             <SuperSetListItem :item="item" type="alunos" />
           </div>
         </b-list-group>
       </b-tab>
       <b-tab title="Alunos Desativados">
+                  <vue-bootstrap-typeahead
+            v-model="query"
+            :data="searchOff"
+            :serializer="(aluno) => `${aluno.matricula} - ${aluno.nome}`"
+            @hit="openModalAluno($event)"
+          />
         <div v-if="loading">
-          <div class="p-2" v-for="item in 20" :key="item.id">
+          <div class="p-2" v-for="item in 20" :key="item.key">
             <CardAlunoLoading />
           </div>
         </div>
-        <div class="p-2" v-for="item in alunosOff" :key="item.id">
-          <CardAluno :dados="item" />
+        <div v-else>
+          <div class="p-2" v-for="item in alunosOff" :key="item.key">
+            <CardAluno :dados="item" />
+          </div>
         </div>
       </b-tab>
     </b-tabs>
@@ -45,54 +61,57 @@
 </template>
 
 <script>
-import firebase from "firebase";
-import CardAlunoLoading from "../components/CardAlunoLoading";
-import CardAluno from "../components/CardAluno";
-import SuperSetListItem from "../components/SuperSetListItem";
+import { store } from "@/store";
 export default {
   name: "Alunos",
   components: {
-    CardAlunoLoading,
-    CardAluno,
-    SuperSetListItem,
+    CardAlunoLoading: () => import("@/components/CardAlunoLoading"),
+    CardAluno: () => import("@/components/CardAluno"),
+    SuperSetListItem: () => import("@/components/SuperSetListItem"),
   },
   data: function () {
     return {
-      newModal: true,
+      query: "",
       loading: true,
-      alunosOn: [],
-      alunosOff: [],
+      alunosOn: {},
+      alunosOff: {},
       alunosSuperSets: {},
+      searchOn: [],
+      searchOff: [],
     };
   },
+  created() {
+    this.getData();
+  },
   methods: {
-    getData(collection) {
-      firebase
-        .database()
-        .ref(`/${collection}/data`)
-        .once("value")
-        .then((snapshot) => {
-          let dados = snapshot.val();
-          if (dados != null) {
-            for (const key in dados) {
-              if (dados[key].enabled == true) {
-                this.alunosOn.push(dados[key]);
-              } else {
-                this.alunosOff.push(dados[key]);
-              }
-            }
+    openModalAluno(dados){
+      this.$bvModal.show(dados.matricula);
+    },
+    getData() {
+      if (store.state.database.alunos.data != null) {
+        for (const key in store.state.database.alunos.data) {
+          if (store.state.database.alunos.data[key].enabled == true) {
+            this.$set(
+              this.alunosOn,
+              key,
+              store.state.database.alunos.data[key]
+            );
+            this.searchOn.push(store.state.database.alunos.data[key]);
+            // this.alunosOn.push(store.state.database.alunos.data[key]);
+          } else {
+            this.$set(
+              this.alunosOff,
+              key,
+              store.state.database.alunos.data[key]
+            );
+            this.searchOff.push(store.state.database.alunos.data[key]);
+            // this.alunosOff.push(store.state.database.alunos.data[key]);
           }
+        }
 
-          this.loading = false;
-        });
-      firebase
-        .database()
-        .ref(`${collection}/sets`)
-        .once("value")
-        .then((snapshot) => {
-          let dados = snapshot.val();
-          this.alunosSuperSets = dados;
-        });
+        this.loading = false;
+      }
+      this.alunosSuperSets = store.state.database.alunos.sets;
     },
     newSuperSet() {
       let newSet = {
@@ -104,9 +123,6 @@ export default {
       this.$set(this.alunosSuperSets, newSet.key, newSet);
       this.$bvModal.show(newSet.key);
     },
-  },
-  mounted: function () {
-    this.getData("alunos");
   },
 };
 </script>

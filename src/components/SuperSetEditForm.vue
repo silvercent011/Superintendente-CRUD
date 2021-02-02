@@ -33,16 +33,23 @@
           input-id="input-emails"
           v-model="form.emails"
           tag-variant="primary"
+          separator=";"
           tag-pills
           size="sm"
           placeholder="Adicionar e-mails"
         ></b-form-tags>
       </b-form-group>
 
+      <!-- <b-form-input list="my-list-id" @submit="addFromList($event)"></b-form-input>
+      <datalist id="my-list-id">
+        <option>Manual Option</option>
+        <option v-for="item in items" :key="item.key">{{ item.email }}</option>
+      </datalist> -->
+
       <b-col>
         <b-row class="py-2">
           <b-button
-          v-on:click="updateData"
+            v-on:click="updateData"
             type="submit"
             variant="primary"
             :disabled="form.default"
@@ -65,12 +72,14 @@
 </template>
 
 <script>
+// import { store } from "@/store";
 import firebase from "firebase";
 export default {
   name: "SuperSetEditForm",
-  props: ["dados","type",],
+  props: ["dados", "type"],
   data() {
     return {
+      // items: store.state.database.alunos.data,
       form: {
         key: this.$props.dados.key,
         default: this.$props.dados.default,
@@ -87,19 +96,24 @@ export default {
         emails: this.form.emails,
         default: this.form.default,
       };
-      console.log(newData)
-      firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key).update(newData)
-      this.$props.dados.key = newData.key
-      this.$props.dados.default = newData.default
-      this.$props.dados.nome = newData.nome
-      this.$props.dados.emails = newData.emails
+      console.log(newData);
+      firebase
+        .database()
+        .ref(`/${this.$props.type}/sets/` + this.form.key)
+        .update(newData);
+      this.$props.dados.key = newData.key;
+      this.$props.dados.default = newData.default;
+      this.$props.dados.nome = newData.nome;
+      this.$props.dados.emails = newData.emails;
     },
     deleteSet() {
-      let ref = firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key)
-      ref.remove()
-      this.$bvModal.hide(this.form.key)
+      let ref = firebase
+        .database()
+        .ref(`/${this.$props.type}/sets/` + this.form.key);
+      ref.remove();
+      this.$bvModal.hide(this.form.key);
     },
-    changeEnabledStatus() {}
+    changeEnabledStatus() {},
   },
 };
 </script>
