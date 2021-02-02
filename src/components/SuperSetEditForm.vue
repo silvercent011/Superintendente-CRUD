@@ -72,14 +72,13 @@
 </template>
 
 <script>
-// import { store } from "@/store";
+import { store } from "@/store";
 import firebase from "firebase";
 export default {
   name: "SuperSetEditForm",
   props: ["dados", "type"],
   data() {
     return {
-      // items: store.state.database.alunos.data,
       form: {
         key: this.$props.dados.key,
         default: this.$props.dados.default,
@@ -105,6 +104,7 @@ export default {
       this.$props.dados.default = newData.default;
       this.$props.dados.nome = newData.nome;
       this.$props.dados.emails = newData.emails;
+      store.dispatch('getData')
     },
     deleteSet() {
       let ref = firebase
@@ -112,6 +112,7 @@ export default {
         .ref(`/${this.$props.type}/sets/` + this.form.key);
       ref.remove();
       this.$bvModal.hide(this.form.key);
+      store.dispatch('getData')
     },
     changeEnabledStatus() {},
   },

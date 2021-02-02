@@ -26,20 +26,6 @@
           </div>
         </b-list-group>
       </b-tab>
-      <!-- <b-tab title="Sets">
-        <b-button-toolbar justified>
-          <b-button-group>
-            <b-button @click="newSuperSet">Novo SuperSet</b-button>
-            <b-button>Atualizar Dados</b-button>
-            <b-button disabled>Disparar superintendente</b-button>
-          </b-button-group>
-        </b-button-toolbar>
-        <b-list-group>
-          <div class="p-2" v-for="item in classroomSuperSets" :key="item.key">
-            <SuperSetListItem :item="item" type="class" model="sets" />
-          </div>
-        </b-list-group>
-      </b-tab> -->
     </b-tabs>
   </b-card>
 </template>
@@ -57,7 +43,6 @@ export default {
       newModal: true,
       loading: true,
       classroom: {},
-      classroomSuperSets: {},
     };
   },
   methods: {
@@ -66,10 +51,6 @@ export default {
         this.classroom = store.state.database.classroom.data;
       }
       this.loading = false;
-
-      if (store.state.database.classroom.sets != null) {
-        this.classroomSuperSets = store.state.database.classroom.sets;
-      }
     },
 
     newClass() {
