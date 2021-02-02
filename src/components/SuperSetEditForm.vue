@@ -105,14 +105,15 @@ export default {
       this.$props.dados.nome = newData.nome;
       this.$props.dados.emails = newData.emails;
       store.dispatch('getData')
+      this.$bvModal.hide(this.form.key);
     },
     deleteSet() {
       let ref = firebase
         .database()
         .ref(`/${this.$props.type}/sets/` + this.form.key);
       ref.remove();
-      this.$bvModal.hide(this.form.key);
       store.dispatch('getData')
+      this.$bvModal.hide(this.form.key);
     },
     changeEnabledStatus() {},
   },

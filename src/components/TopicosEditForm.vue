@@ -68,6 +68,7 @@ export default {
       firebase.database().ref(`/${this.$props.type}/${this.$props.model}/` + this.form.key).update(newData)
       this.$props.dados.key = newData.key
       this.$props.dados.nome = newData.nome
+      this.$bvModal.hide(this.form.key);
     },
     deleteSet() {
       let ref = firebase.database().ref(`/${this.$props.type}/${this.$props.model}/` + this.form.key)

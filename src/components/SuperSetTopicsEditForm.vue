@@ -91,11 +91,13 @@ export default {
       this.$props.dados.key = newData.key
       this.$props.dados.nome = newData.nome
       this.$props.dados.topicos = newData.topicos
+      this.$bvModal.hide(this.form.key);
     },
     deleteSet() {
       let ref = firebase.database().ref(`/${this.$props.type}/sets/` + this.form.key)
       ref.remove()
       this.$bvModal.hide(this.form.key)
+      this.$bvModal.hide(this.form.key);
     },
     changeEnabledStatus() {}
   },

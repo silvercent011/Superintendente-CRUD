@@ -106,6 +106,7 @@ export default {
       this.$props.dados.email = this.form.email;
       this.$props.dados.turno = this.form.turno;
       this.$props.dados.turma = this.form.turma;
+      this.$bvModal.hide(this.form.key);
     },
     changeEnabledStatus() {
       this.form.enabled = !this.form.enabled;

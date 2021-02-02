@@ -79,6 +79,7 @@ export default {
         .update(newData);
       this.$props.dados.nome = this.form.nome;
       this.$props.dados.email = this.form.email;
+      this.$bvModal.hide(this.form.key);
     },
     changeEnabledStatus() {
       this.form.enabled = !this.form.enabled;
